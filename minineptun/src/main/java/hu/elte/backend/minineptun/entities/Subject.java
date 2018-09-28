@@ -24,7 +24,7 @@ public class Subject {
 
     @Column
     private Categories category;
-    
+
     //professors of this subject
     @ManyToMany
     private List<Lecturer> lecturers;
