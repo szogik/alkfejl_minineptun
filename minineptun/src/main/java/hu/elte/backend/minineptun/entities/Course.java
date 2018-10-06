@@ -1,13 +1,12 @@
 package hu.elte.backend.minineptun.entities;
 
+import hu.elte.backend.minineptun.CourseType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import javax.persistence.Entity;
 
 import javax.persistence.*;
-import javax.security.auth.Subject;
 import java.util.List;
 
 @Entity
@@ -21,7 +20,7 @@ public class Course {
     private Integer id;
 
     @Column
-    private String type;
+    private CourseType type;
 
     @Column
     private String location;
@@ -29,7 +28,7 @@ public class Course {
     @Column
     private String time;
 
-    //students who attending this class
+    //students attending this course
     @ManyToMany
     private List<Student> students;
 
@@ -37,7 +36,7 @@ public class Course {
     @ManyToOne
     private Subject subject;
 
-    //the lecturer who teaches
+    //the lecturer of the course
     @ManyToOne
     private Lecturer lecturer;
 

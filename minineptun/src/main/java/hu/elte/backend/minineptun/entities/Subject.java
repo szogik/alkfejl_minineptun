@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import javax.persistence.Entity;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class Subject {
     private String name;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private Categories category;
 
     //professors of this subject

@@ -1,9 +1,7 @@
 package hu.elte.backend.minineptun.controllers;
 
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
-import hu.elte.backend.minineptun.entities.Lecturer;
 import hu.elte.backend.minineptun.entities.Student;
-import hu.elte.backend.minineptun.repository.StudentRepository;
+import hu.elte.backend.minineptun.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,17 +34,6 @@ public class StudentController {
     public ResponseEntity<Student> post(@RequestBody Student student) {
         Student savedStudent = studentRepository.save(student);
         return ResponseEntity.ok(savedStudent);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Student> put(@RequestBody Student student, @PathVariable Integer id) {
-        Optional<Student> oStudent = studentRepository.findById(id);
-        if (oStudent.isPresent()) {
-            //student.setId(id);
-            return ResponseEntity.ok(studentRepository.save(student));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @DeleteMapping("/{id}")

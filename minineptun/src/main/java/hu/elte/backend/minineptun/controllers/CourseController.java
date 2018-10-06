@@ -1,8 +1,10 @@
 package hu.elte.backend.minineptun.controllers;
 
 
+import hu.elte.backend.minineptun.CourseType;
 import hu.elte.backend.minineptun.entities.Course;
-import hu.elte.backend.minineptun.repository.CourseRepository;
+import hu.elte.backend.minineptun.repositories.CourseRepository;
+import hu.elte.backend.minineptun.repositories.LecturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
+
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private LecturerRepository lecturerRepository;
 
     @GetMapping("")
     public ResponseEntity<Iterable<Course>> getAll() {
@@ -36,12 +42,24 @@ public class CourseController {
         return ResponseEntity.ok(savedCourse);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Course> put(@RequestBody Course course, @PathVariable Integer id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Course> put(@RequestParam CourseType type,
+                                      @RequestParam String time,
+                                      @RequestParam String location,
+                                      @RequestParam Integer lecturerId,
+                                      @PathVariable Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {
-            //course.setId(id);
-            return ResponseEntity.ok(courseRepository.save(course));
+            Course course = oCourse.get();
+            if (type != null)
+                course.setType(type);
+            if (time != null)
+                course.setTime(time);
+            if (location != null)
+                course.setLocation(location);
+            if (lecturerId != null && lecturerRepository.findById(lecturerId).isPresent())
+                course.setLecturer(lecturerRepository.findById(lecturerId).get());
+            return ResponseEntity.ok(course);
         } else {
             return ResponseEntity.notFound().build();
         }

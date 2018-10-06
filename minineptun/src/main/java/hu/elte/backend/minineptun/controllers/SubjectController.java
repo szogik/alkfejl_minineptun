@@ -1,12 +1,12 @@
 package hu.elte.backend.minineptun.controllers;
 
 
-import hu.elte.backend.minineptun.repository.SubjectRepository;
+import hu.elte.backend.minineptun.entities.Subject;
+import hu.elte.backend.minineptun.repositories.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.Subject;
 import java.util.Optional;
 
 @RestController
@@ -35,17 +35,6 @@ public class SubjectController {
     public ResponseEntity<Subject> post(@RequestBody Subject subject) {
         Subject savedSubject = subjectRepository.save(subject);
         return ResponseEntity.ok(savedSubject);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Subject> put(@RequestBody Subject subject, @PathVariable Integer id) {
-        Optional<Subject> oSubject = subjectRepository.findById(id);
-        if (oSubject.isPresent()) {
-            //subject.setId(id);
-            return ResponseEntity.ok(subjectRepository.save(subject));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @DeleteMapping("/{id}")

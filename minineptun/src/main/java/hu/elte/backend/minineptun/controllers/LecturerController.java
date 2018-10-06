@@ -1,7 +1,7 @@
 package hu.elte.backend.minineptun.controllers;
 
 import hu.elte.backend.minineptun.entities.Lecturer;
-import hu.elte.backend.minineptun.repository.LecturerRepository;
+import hu.elte.backend.minineptun.repositories.LecturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +36,15 @@ public class LecturerController {
         return ResponseEntity.ok(savedLecturer);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Lecturer> put(@RequestBody Lecturer lecturer, @PathVariable Integer id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Lecturer> put(@RequestParam String name, @PathVariable Integer id) {
         Optional<Lecturer> oLecturer = lecturerRepository.findById(id);
         if (oLecturer.isPresent()) {
-            //lecturer.setId(id);
-            return ResponseEntity.ok(lecturerRepository.save(lecturer));
+            Lecturer lecturer = oLecturer.get();
+            if (name != null) {
+                lecturer.setName(name);
+            }
+            return ResponseEntity.ok(lecturer);
         } else {
             return ResponseEntity.notFound().build();
         }

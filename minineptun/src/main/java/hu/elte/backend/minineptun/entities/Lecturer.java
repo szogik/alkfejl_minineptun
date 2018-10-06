@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import javax.persistence.Entity;
 
 import javax.persistence.*;
-import javax.security.auth.Subject;
 import java.util.List;
 
 @Entity
@@ -25,12 +23,12 @@ public class Lecturer {
     @Column
     private String name;
 
-    //this is the professor of these subjects
+    //the lecturer is the professor of these subjects
     @ManyToMany
     private List<Subject> subjects;
 
 
-    //this is teaching at these courses
+    //the lecturer teaches at the following courses
     @OneToMany
     private List<Course> courses;
 }
