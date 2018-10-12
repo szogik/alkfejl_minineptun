@@ -3,6 +3,7 @@ package hu.elte.backend.minineptun.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
@@ -23,13 +24,15 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private boolean enabled;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public enum Role {
-        ROLE_GUEST, ROLE_USER, ROLE_ADMIN
+    public enum Role implements GrantedAuthority {
+        ROLE_STUDENT, ROLE_TEACHER, ROLE_ADMIN;
+
+        @Override
+        public String getAuthority() {
+            return this.toString();
+        }
     }
 }

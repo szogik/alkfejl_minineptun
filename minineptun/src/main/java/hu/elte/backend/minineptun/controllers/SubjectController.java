@@ -3,8 +3,10 @@ package hu.elte.backend.minineptun.controllers;
 
 import hu.elte.backend.minineptun.entities.Subject;
 import hu.elte.backend.minineptun.repositories.SubjectRepository;
+import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -16,7 +18,11 @@ public class SubjectController {
     @Autowired
     private SubjectRepository subjectRepository;
 
+    @Autowired
+    private UserDetailsServiceImpl userService;
+
     @GetMapping("")
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Iterable<Subject>> getAll() {
         return ResponseEntity.ok(subjectRepository.findAll());
     }

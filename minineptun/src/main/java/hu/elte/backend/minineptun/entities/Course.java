@@ -1,6 +1,5 @@
 package hu.elte.backend.minineptun.entities;
 
-import hu.elte.backend.minineptun.CourseType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,5 +39,8 @@ public class Course {
     @ManyToOne
     private Lecturer lecturer;
 
+    public enum CourseType {
+        LECTURE, PRACTICE
+    }
 
 }

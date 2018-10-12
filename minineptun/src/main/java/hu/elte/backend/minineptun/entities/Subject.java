@@ -1,6 +1,5 @@
 package hu.elte.backend.minineptun.entities;
 
-import hu.elte.backend.Categories;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,4 +32,8 @@ public class Subject {
     //courses of this subject
     @OneToMany
     private List<Course> courses;
+
+    public enum Categories {
+        COMPUTER_SCIENCE, NATURAL_SCIENCE, PROGRAMMING;
+    }
 }

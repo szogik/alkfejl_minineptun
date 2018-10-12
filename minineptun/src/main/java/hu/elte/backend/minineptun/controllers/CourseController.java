@@ -1,12 +1,13 @@
 package hu.elte.backend.minineptun.controllers;
 
 
-import hu.elte.backend.minineptun.CourseType;
 import hu.elte.backend.minineptun.entities.Course;
 import hu.elte.backend.minineptun.repositories.CourseRepository;
 import hu.elte.backend.minineptun.repositories.LecturerRepository;
+import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,13 +22,18 @@ public class CourseController {
     @Autowired
     private LecturerRepository lecturerRepository;
 
+    @Autowired
+    private UserDetailsServiceImpl userService;
+
     @GetMapping("")
+    @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
     public ResponseEntity<Iterable<Course>> getAll() {
+
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Course> get(@PathVariable Integer id) {
+    public ResponseEntity<Course> getCourses(@PathVariable Integer id) {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
             return ResponseEntity.ok(course.get());
@@ -37,17 +43,17 @@ public class CourseController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Course> post(@RequestBody Course course) {
+    public ResponseEntity<Course> postCourse(@RequestBody Course course) {
         Course savedCourse = courseRepository.save(course);
         return ResponseEntity.ok(savedCourse);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Course> put(@RequestParam CourseType type,
-                                      @RequestParam String time,
-                                      @RequestParam String location,
-                                      @RequestParam Integer lecturerId,
-                                      @PathVariable Integer id) {
+    public ResponseEntity<Course> patchCourse(@RequestParam Course.CourseType type,
+                                              @RequestParam String time,
+                                              @RequestParam String location,
+                                              @RequestParam Integer lecturerId,
+                                              @PathVariable Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {
             Course course = oCourse.get();
@@ -66,7 +72,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Integer id) {
+    public ResponseEntity deleteCourse(@PathVariable Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {
             courseRepository.deleteById(id);
