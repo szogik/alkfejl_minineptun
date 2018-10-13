@@ -27,8 +27,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "user")
+    private BaseEntity entity;
+
     public enum Role implements GrantedAuthority {
-        ROLE_STUDENT, ROLE_TEACHER, ROLE_ADMIN;
+        ROLE_STUDENT, ROLE_LECTURER, ROLE_ADMIN;
 
         @Override
         public String getAuthority() {

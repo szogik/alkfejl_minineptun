@@ -26,13 +26,14 @@ public class CourseController {
     private UserDetailsServiceImpl userService;
 
     @GetMapping("")
-    @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
+    @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Iterable<Course>> getAll() {
 
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
     @GetMapping("/{id}")
+    @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Course> getCourses(@PathVariable Integer id) {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
@@ -43,12 +44,14 @@ public class CourseController {
     }
 
     @PostMapping("")
+    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Course> postCourse(@RequestBody Course course) {
         Course savedCourse = courseRepository.save(course);
         return ResponseEntity.ok(savedCourse);
     }
 
     @PatchMapping("/{id}")
+    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Course> patchCourse(@RequestParam Course.CourseType type,
                                               @RequestParam String time,
                                               @RequestParam String location,
@@ -72,6 +75,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity deleteCourse(@PathVariable Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {

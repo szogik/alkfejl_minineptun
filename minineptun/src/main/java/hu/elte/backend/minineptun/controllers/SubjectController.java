@@ -22,12 +22,13 @@ public class SubjectController {
     private UserDetailsServiceImpl userService;
 
     @GetMapping("")
-    @Secured({"ROLE_ADMIN"})
+    @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Iterable<Subject>> getAll() {
         return ResponseEntity.ok(subjectRepository.findAll());
     }
 
     @GetMapping("/{id}")
+    @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Subject> get(@PathVariable Integer id) {
         Optional<Subject> subject = subjectRepository.findById(id);
         if (subject.isPresent()) {
@@ -38,12 +39,14 @@ public class SubjectController {
     }
 
     @PostMapping("")
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Subject> post(@RequestBody Subject subject) {
         Subject savedSubject = subjectRepository.save(subject);
         return ResponseEntity.ok(savedSubject);
     }
 
     @DeleteMapping("/{id}")
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity delete(@PathVariable Integer id) {
         Optional<Subject> oSubject = subjectRepository.findById(id);
         if (oSubject.isPresent()) {
