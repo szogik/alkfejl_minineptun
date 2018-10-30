@@ -1,5 +1,6 @@
 package hu.elte.backend.minineptun.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,9 +27,6 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToOne(mappedBy = "user")
-    private BaseEntity entity;
 
     public enum Role implements GrantedAuthority {
         ROLE_STUDENT, ROLE_LECTURER, ROLE_ADMIN;

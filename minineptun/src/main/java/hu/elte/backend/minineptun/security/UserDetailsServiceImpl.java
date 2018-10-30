@@ -43,21 +43,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), true, true, true, true, grantedAuthorities);
     }
 
-    public User setUserEntity(User user) {
+    public User setUserEntity(User user, String fullName) {
 
         if (user.getRole().equals(User.Role.ROLE_STUDENT)) {
             Student student = new Student(new ArrayList<>());
             studentRepository.save(student);
-            student.setName(user.getUsername());
+            student.setName(fullName);
             student.setUser(user);
-            user.setEntity(student);
 
         } else if (user.getRole().equals(User.Role.ROLE_LECTURER)) {
             Lecturer lecturer = new Lecturer(new ArrayList<>(), new ArrayList<>());
             lecturerRepository.save(lecturer);
             lecturer.setName(user.getUsername());
             lecturer.setUser(user);
-            user.setEntity(lecturer);
 
         }
         return userRepository.save(user);

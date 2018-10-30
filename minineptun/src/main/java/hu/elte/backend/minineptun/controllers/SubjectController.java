@@ -1,7 +1,8 @@
 package hu.elte.backend.minineptun.controllers;
 
-
+import hu.elte.backend.minineptun.entities.Lecturer;
 import hu.elte.backend.minineptun.entities.Subject;
+import hu.elte.backend.minineptun.repositories.LecturerRepository;
 import hu.elte.backend.minineptun.repositories.SubjectRepository;
 import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class SubjectController {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private LecturerRepository lecturerRepository;
 
     @Autowired
     private UserDetailsServiceImpl userService;
@@ -43,6 +47,21 @@ public class SubjectController {
     public ResponseEntity<Subject> post(@RequestBody Subject subject) {
         Subject savedSubject = subjectRepository.save(subject);
         return ResponseEntity.ok(savedSubject);
+    }
+
+    @PatchMapping("/add-lecturer")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<Object> addLecturer(@RequestParam Integer lecturerId, @RequestParam Integer subjectId){
+        Lecturer lecturer = lecturerRepository.findById(lecturerId).get();
+        if(lecturer == null){
+            return ResponseEntity.badRequest().build();
+        }
+        Subject subject = subjectRepository.findById(subjectId).get();
+        if(subject == null){
+            return ResponseEntity.badRequest().build();
+        }
+        subject.getLecturers().add(lecturer);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
