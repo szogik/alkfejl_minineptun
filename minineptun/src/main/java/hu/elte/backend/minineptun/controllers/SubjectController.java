@@ -49,9 +49,9 @@ public class SubjectController {
         return ResponseEntity.ok(savedSubject);
     }
 
-    @PatchMapping("/add-lecturer")
+    @PatchMapping("/{id}/add-lecturer")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Object> addLecturer(@RequestParam Integer lecturerId, @RequestParam Integer subjectId){
+    public ResponseEntity<Object> addLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
         Lecturer lecturer = lecturerRepository.findById(lecturerId).get();
         if(lecturer == null){
             return ResponseEntity.badRequest().build();

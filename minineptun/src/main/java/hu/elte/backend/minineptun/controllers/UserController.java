@@ -1,8 +1,6 @@
 package hu.elte.backend.minineptun.controllers;
 
 import hu.elte.backend.minineptun.entities.User;
-import hu.elte.backend.minineptun.repositories.LecturerRepository;
-import hu.elte.backend.minineptun.repositories.StudentRepository;
 import hu.elte.backend.minineptun.repositories.UserRepository;
 import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +17,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final StudentRepository studentRepository;
-    private final LecturerRepository lecturerRepository;
+
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -36,7 +33,7 @@ public class UserController {
 
     @GetMapping("/{username}")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<User> findUser(@RequestParam String username) {
+    public ResponseEntity<User> findUser(@PathVariable String username) {
         Optional<User> oUser = userRepository.findByUsername(username);
         if (oUser.isPresent()) {
             return ResponseEntity.ok(oUser.get());

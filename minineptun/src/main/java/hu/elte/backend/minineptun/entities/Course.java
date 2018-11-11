@@ -29,6 +29,7 @@ public class Course {
 
     //students attending this course
     @ManyToMany
+    @Transient
     private List<Student> students;
 
     //the course's subject
