@@ -33,11 +33,15 @@ public class LecturerController {
         }
     }
 
-    @PostMapping("")
-    @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Lecturer> post(@RequestBody Lecturer lecturer) {
-        Lecturer savedLecturer = lecturerRepository.save(lecturer);
-        return ResponseEntity.ok(savedLecturer);
+    @GetMapping("/by-name")
+    @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
+    public ResponseEntity<Lecturer> getLecturerByName(@RequestParam String name) {
+        Optional<Lecturer> lecturer = lecturerRepository.findByName(name);
+        if (lecturer.isPresent()) {
+            return ResponseEntity.ok(lecturer.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PatchMapping("/{id}")

@@ -38,21 +38,25 @@ public class StudentController {
         }
     }
 
-    @PostMapping("")
-    @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Student> post(@RequestBody Student student) {
-        Student savedStudent = studentRepository.save(student);
-        return ResponseEntity.ok(savedStudent);
+    @GetMapping("/by-name")
+    @Secured({"ROLE_STUDENT"})
+    public ResponseEntity<Student> getStudentByName(@RequestParam(name = "name") String name) {
+        Optional<Student> student = studentRepository.findByName(name);
+        if (student.isPresent()) {
+            return ResponseEntity.ok(student.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PatchMapping("/{id}/add-course")
+    @PatchMapping("/add-course")
     @Secured("ROLE_STUDENT,ROLE_ADMIN")
-    public ResponseEntity<Student> addCourse(@PathVariable Integer studentId, @RequestParam Integer courseId) {
+    public ResponseEntity<Student> addCourse(@RequestParam(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
         Course course = courseRepository.findById(courseId).get();
         if (course == null) {
             return ResponseEntity.badRequest().build();
         }
-        Student student = studentRepository.findById(studentId).get();
+        Student student = studentRepository.findById(id).get();
         if (student == null) {
             return ResponseEntity.badRequest().build();
         }

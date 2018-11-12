@@ -27,6 +27,7 @@ public class Subject {
 
     //professors of this subject
     @ManyToMany
+    @Transient
     private List<Lecturer> lecturers;
 
     //courses of this subject
