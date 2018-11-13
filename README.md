@@ -30,40 +30,40 @@
   - Admin: Létrehozhat, módosíthat, törölhet bármilyen kurzust. A hallgatókat fel- és lejelentkeztetheti a kurzusokról.
   
 # Végpontok
-user
-POST: /users/register
-POST: /login
-GET: /users/{username}
+  user
+    POST: /users/register
+    POST: /login
+    GET: /users/{username}
 
-course
-GET: /courses
-GET: /courses/{id}
-DELETE: /courses/{id}
-POST: /courses
-PATCH: /courses/{id}
+  course
+    GET: /courses
+    GET: /courses/{id}
+    DELETE: /courses/{id}
+    POST: /courses
+    PATCH: /courses/{id}
 
-subject
-GET: /subjects
-GET: /subjects/{id}
-POST: /subjects
-PATCH: /subjects/{id}/add-lecturer
-PATCH: /subjects/{id}/add-course
-PATCH: /subjects/{id}/remove-lecturer
-PATCH: /subjects/{id}/remove-course
-DELETE: /subjects/{id}
+  subject
+    GET: /subjects
+    GET: /subjects/{id}
+    POST: /subjects
+    PATCH: /subjects/{id}/add-lecturer
+    PATCH: /subjects/{id}/add-course
+    PATCH: /subjects/{id}/remove-lecturer
+    PATCH: /subjects/{id}/remove-course
+    DELETE: /subjects/{id}
 
-lecturer
-GET: /lecturers
-GET: /lecturers/{id}
-POST: /lecturers
-DELETE: /lecturers/{id}
-PATCH: /lecturers/{id}/add-course
-PATCH: /lecturers/{id}/remove-course
+  lecturer
+    GET: /lecturers
+    GET: /lecturers/{id}
+    POST: /lecturers
+    DELETE: /lecturers/{id}
+    PATCH: /lecturers/{id}/add-course
+    PATCH: /lecturers/{id}/remove-course
 
-student
-GET: /students
-GET: /students/{id}
-POST: /students
-DELETE: /students/{id}
-PATCH: /students/{id}/add-course
-PATCH: /students/{id}/remove-course
+  student
+    GET: /students
+    GET: /students/{id}
+    POST: /students
+    DELETE: /students/{id}
+    PATCH: /students/{id}/add-course
+    PATCH: /students/{id}/remove-course
