@@ -72,3 +72,12 @@
     -DELETE: /students/{id}
     -PATCH: /students/{id}/add-course
     -PATCH: /students/{id}/remove-course
+   
+   
+   # A regisztrációs végpont működésének bemutatása szekvenciadiagramon
+   
+![alttext](https://github.com/szogik/alkfejl_minineptun/blob/master/szekvencia%20diagram.jpg)
+
+  # Az adatbázis egyed-kapcsolat diagramja
+  
+  ![alttext](https://github.com/szogik/alkfejl_minineptun/blob/master/ER%20diagram.jpg)
