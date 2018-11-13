@@ -1,18 +1,19 @@
 package hu.elte.backend.minineptun.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "students")
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,16 +28,13 @@ public class Course {
     @Column
     private String time;
 
-    //students attending this course
-    @ManyToMany
-    @Transient
-    private List<Student> students;
+    @ManyToMany(mappedBy = "courses")
+    @JsonIgnore
+    private Set<Student> students;
 
-    //the course's subject
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Subject subject;
 
-    //the lecturer of the course
     @ManyToOne
     private Lecturer lecturer;
 

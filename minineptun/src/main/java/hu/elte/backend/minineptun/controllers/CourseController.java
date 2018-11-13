@@ -28,7 +28,6 @@ public class CourseController {
     @GetMapping("")
     @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Iterable<Course>> getAll() {
-
         return ResponseEntity.ok(courseRepository.findAll());
     }
 
@@ -44,7 +43,7 @@ public class CourseController {
     }
 
     @PostMapping("")
-    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Course> postCourse(@RequestBody Course course) {
         Course savedCourse = courseRepository.save(course);
         return ResponseEntity.ok(savedCourse);
@@ -69,13 +68,12 @@ public class CourseController {
             if (lecturerId != null && lecturerRepository.findById(lecturerId).isPresent())
                 course.setLecturer(lecturerRepository.findById(lecturerId).get());
             return ResponseEntity.ok(course);
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity deleteCourse(@PathVariable Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {

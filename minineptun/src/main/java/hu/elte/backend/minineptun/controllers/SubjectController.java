@@ -1,10 +1,11 @@
 package hu.elte.backend.minineptun.controllers;
 
+import hu.elte.backend.minineptun.entities.Course;
 import hu.elte.backend.minineptun.entities.Lecturer;
 import hu.elte.backend.minineptun.entities.Subject;
+import hu.elte.backend.minineptun.repositories.CourseRepository;
 import hu.elte.backend.minineptun.repositories.LecturerRepository;
 import hu.elte.backend.minineptun.repositories.SubjectRepository;
-import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -23,7 +24,7 @@ public class SubjectController {
     private LecturerRepository lecturerRepository;
 
     @Autowired
-    private UserDetailsServiceImpl userService;
+    private CourseRepository courseRepository;
 
     @GetMapping("")
     @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})
@@ -49,18 +50,86 @@ public class SubjectController {
         return ResponseEntity.ok(savedSubject);
     }
 
-    @PatchMapping("/{id}/add-lecturer")
+    @PatchMapping("/{subjectId}/add-lecturer")
     @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Object> addLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
-        Lecturer lecturer = lecturerRepository.findById(lecturerId).get();
-        if(lecturer == null){
+        Optional<Lecturer> olecturer = lecturerRepository.findById(lecturerId);
+        if (!olecturer.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-        Subject subject = subjectRepository.findById(subjectId).get();
-        if(subject == null){
+        Optional<Subject> osubject = subjectRepository.findById(subjectId);
+        if (!osubject.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
+        Lecturer lecturer = olecturer.get();
+        Subject subject = osubject.get();
         subject.getLecturers().add(lecturer);
+        lecturer.getSubjects().add(subject);
+        lecturerRepository.save(lecturer);
+        subjectRepository.save(subject);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{subjectId}/remove-lecturer")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<Object> removeLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
+        Optional<Lecturer> olecturer = lecturerRepository.findById(lecturerId);
+        if (!olecturer.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Subject> osubject = subjectRepository.findById(subjectId);
+        if (!osubject.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Lecturer lecturer = olecturer.get();
+        Subject subject = osubject.get();
+        subject.getLecturers().remove(lecturer);
+        lecturer.getSubjects().remove(subject);
+        lecturerRepository.save(lecturer);
+        subjectRepository.save(subject);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{subjectId}/add-course")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<Object> addCourse(@RequestParam Integer courseId, @PathVariable Integer subjectId) {
+        Optional<Course> ocourse = courseRepository.findById(courseId);
+        if (!ocourse.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Subject> osubject = subjectRepository.findById(subjectId);
+        if (!osubject.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Course course = ocourse.get();
+        Subject subject = osubject.get();
+        subject.getCourses().add(course);
+        course.setSubject(subject);
+        subjectRepository.save(subject);
+        subjectRepository.save(subject);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{subjectId}/remove-course")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<Object> removeCourse(@RequestParam Integer courseId, @PathVariable Integer subjectId) {
+        Optional<Course> ocourse = courseRepository.findById(courseId);
+        if (!ocourse.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Subject> osubject = subjectRepository.findById(subjectId);
+        if (!osubject.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Course course = ocourse.get();
+        Subject subject = osubject.get();
+        if (!subject.getCourses().contains(course) || !course.getSubject().equals(subject)) {
+            return ResponseEntity.badRequest().build();
+        }
+        subject.getCourses().remove(course);
+        course.setSubject(null);
+        subjectRepository.save(subject);
+        subjectRepository.save(subject);
         return ResponseEntity.ok().build();
     }
 

@@ -1,6 +1,7 @@
 package hu.elte.backend.minineptun.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,12 +19,10 @@ import java.util.List;
 @EqualsAndHashCode
 public class Lecturer extends BaseEntity {
 
-    //the lecturer is the professor of these subjects
     @ManyToMany
-    private List<Subject> subjects;
+    private Set<Subject> subjects;
 
-
-    //the lecturer teaches at the following courses
     @OneToMany
-    private List<Course> courses;
+    @JsonIgnore
+    private Set<Course> courses;
 }

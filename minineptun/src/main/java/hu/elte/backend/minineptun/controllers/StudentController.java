@@ -49,18 +49,43 @@ public class StudentController {
         }
     }
 
-    @PatchMapping("/add-course")
-    @Secured("ROLE_STUDENT,ROLE_ADMIN")
-    public ResponseEntity<Student> addCourse(@RequestParam(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
-        Course course = courseRepository.findById(courseId).get();
-        if (course == null) {
+    @PatchMapping("/{id}/add-course")
+    @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
+    public ResponseEntity<Student> addCourse(@PathVariable(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
+        Optional<Student> ostudent = studentRepository.findById(id);
+        if (!ostudent.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-        Student student = studentRepository.findById(id).get();
-        if (student == null) {
+        Optional<Course> ocourse = courseRepository.findById(courseId);
+        if (!ocourse.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
+        Student student = ostudent.get();
+        Course course = ocourse.get();
         student.getCourses().add(course);
+        course.getStudents().add(student);
+        studentRepository.save(student);
+        courseRepository.save(course);
+        return ResponseEntity.ok(student);
+    }
+
+    @PatchMapping("/{id}/remove-course")
+    @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
+    public ResponseEntity<Student> removeCourse(@PathVariable(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
+        Optional<Student> ostudent = studentRepository.findById(id);
+        if (!ostudent.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Course> ocourse = courseRepository.findById(courseId);
+        if (!ocourse.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Student student = ostudent.get();
+        Course course = ocourse.get();
+        student.getCourses().remove(course);
+        course.getStudents().remove(student);
+        studentRepository.save(student);
+        courseRepository.save(course);
         return ResponseEntity.ok(student);
     }
 

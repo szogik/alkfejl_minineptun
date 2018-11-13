@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,7 +17,6 @@ import java.util.List;
 @EqualsAndHashCode
 public class Student extends BaseEntity {
 
-    //the student's courses
     @ManyToMany
-    private List<Course> courses;
+    private Set<Course> courses;
 }

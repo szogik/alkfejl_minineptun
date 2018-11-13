@@ -3,7 +3,7 @@ package hu.elte.backend.minineptun.controllers;
 import hu.elte.backend.minineptun.entities.User;
 import hu.elte.backend.minineptun.repositories.UserRepository;
 import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
-
-    private final UserRepository userRepository;
-
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {

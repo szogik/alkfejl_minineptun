@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,17 +45,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User setUserEntity(User user, String fullName) {
 
         if (user.getRole().equals(User.Role.ROLE_STUDENT)) {
-            Student student = new Student(new ArrayList<>());
+            Student student = new Student(new HashSet<>());
             studentRepository.save(student);
             student.setName(fullName);
             student.setUser(user);
 
         } else if (user.getRole().equals(User.Role.ROLE_LECTURER)) {
-            Lecturer lecturer = new Lecturer(new ArrayList<>(), new ArrayList<>());
+            Lecturer lecturer = new Lecturer(new HashSet<>(), new HashSet<>());
             lecturerRepository.save(lecturer);
             lecturer.setName(user.getUsername());
             lecturer.setUser(user);
-
         }
         return userRepository.save(user);
     }
