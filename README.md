@@ -31,39 +31,44 @@
   
 # Végpontok
   user
-    POST: /users/register
-    POST: /login
-    GET: /users/{username}
+  
+    -POST: /users/register
+    -POST: /login
+    -GET: /users/{username}
 
   course
-    GET: /courses
-    GET: /courses/{id}
-    DELETE: /courses/{id}
-    POST: /courses
-    PATCH: /courses/{id}
+  
+    -GET: /courses
+    -GET: /courses/{id}
+    -DELETE: /courses/{id}
+    -POST: /courses
+    -PATCH: /courses/{id}
 
   subject
-    GET: /subjects
-    GET: /subjects/{id}
-    POST: /subjects
-    PATCH: /subjects/{id}/add-lecturer
-    PATCH: /subjects/{id}/add-course
-    PATCH: /subjects/{id}/remove-lecturer
-    PATCH: /subjects/{id}/remove-course
-    DELETE: /subjects/{id}
+  
+    -GET: /subjects
+    -GET: /subjects/{id}
+    -POST: /subjects
+    -PATCH: /subjects/{id}/add-lecturer
+    -PATCH: /subjects/{id}/add-course
+    -PATCH: /subjects/{id}/remove-lecturer
+    -PATCH: /subjects/{id}/remove-course
+    -DELETE: /subjects/{id}
 
   lecturer
-    GET: /lecturers
-    GET: /lecturers/{id}
-    POST: /lecturers
-    DELETE: /lecturers/{id}
-    PATCH: /lecturers/{id}/add-course
-    PATCH: /lecturers/{id}/remove-course
+  
+    -GET: /lecturers
+    -GET: /lecturers/{id}
+    -POST: /lecturers
+    -DELETE: /lecturers/{id}
+    -PATCH: /lecturers/{id}/add-course
+    -PATCH: /lecturers/{id}/remove-course
 
   student
-    GET: /students
-    GET: /students/{id}
-    POST: /students
-    DELETE: /students/{id}
-    PATCH: /students/{id}/add-course
-    PATCH: /students/{id}/remove-course
+  
+    -GET: /students
+    -GET: /students/{id}
+    -POST: /students
+    -DELETE: /students/{id}
+    -PATCH: /students/{id}/add-course
+    -PATCH: /students/{id}/remove-course
