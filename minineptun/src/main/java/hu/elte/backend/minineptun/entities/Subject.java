@@ -13,24 +13,30 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "lecturers")
+@EqualsAndHashCode
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Column
+    @EqualsAndHashCode.Include
     private String name;
 
     @Column
     @Enumerated(EnumType.STRING)
+    @EqualsAndHashCode.Include
     private Categories category;
 
-    @ManyToMany(mappedBy = "subjects")
-    @JsonIgnore
+    @ManyToMany
+    @EqualsAndHashCode.Exclude
     private Set<Lecturer> lecturers;
 
-    @OneToMany(mappedBy = "subject")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subject_id")
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Set<Course> courses;
 
     public enum Categories {

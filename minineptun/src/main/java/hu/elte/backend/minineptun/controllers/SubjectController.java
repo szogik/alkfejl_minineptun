@@ -52,7 +52,7 @@ public class SubjectController {
 
     @PatchMapping("/{subjectId}/add-lecturer")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Object> addLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
+    public ResponseEntity<Subject> addLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
         Optional<Lecturer> olecturer = lecturerRepository.findById(lecturerId);
         if (!olecturer.isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -67,12 +67,12 @@ public class SubjectController {
         lecturer.getSubjects().add(subject);
         lecturerRepository.save(lecturer);
         subjectRepository.save(subject);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(subject);
     }
 
     @PatchMapping("/{subjectId}/remove-lecturer")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Object> removeLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
+    public ResponseEntity<Subject> removeLecturer(@RequestParam Integer lecturerId, @PathVariable Integer subjectId) {
         Optional<Lecturer> olecturer = lecturerRepository.findById(lecturerId);
         if (!olecturer.isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -87,12 +87,12 @@ public class SubjectController {
         lecturer.getSubjects().remove(subject);
         lecturerRepository.save(lecturer);
         subjectRepository.save(subject);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(subject);
     }
 
     @PatchMapping("/{subjectId}/add-course")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Object> addCourse(@RequestParam Integer courseId, @PathVariable Integer subjectId) {
+    public ResponseEntity<Course> addCourse(@RequestParam Integer courseId, @PathVariable Integer subjectId) {
         Optional<Course> ocourse = courseRepository.findById(courseId);
         if (!ocourse.isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -106,13 +106,13 @@ public class SubjectController {
         subject.getCourses().add(course);
         course.setSubject(subject);
         subjectRepository.save(subject);
-        subjectRepository.save(subject);
-        return ResponseEntity.ok().build();
+        courseRepository.save(course);
+        return ResponseEntity.ok(course);
     }
 
     @PatchMapping("/{subjectId}/remove-course")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Object> removeCourse(@RequestParam Integer courseId, @PathVariable Integer subjectId) {
+    public ResponseEntity<Course> removeCourse(@RequestParam Integer courseId, @PathVariable Integer subjectId) {
         Optional<Course> ocourse = courseRepository.findById(courseId);
         if (!ocourse.isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -129,8 +129,8 @@ public class SubjectController {
         subject.getCourses().remove(course);
         course.setSubject(null);
         subjectRepository.save(subject);
-        subjectRepository.save(subject);
-        return ResponseEntity.ok().build();
+        courseRepository.save(course);
+        return ResponseEntity.ok(course);
     }
 
     @DeleteMapping("/{id}")

@@ -51,10 +51,9 @@ public class CourseController {
 
     @PatchMapping("/{id}")
     @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
-    public ResponseEntity<Course> patchCourse(@RequestParam Course.CourseType type,
-                                              @RequestParam String time,
-                                              @RequestParam String location,
-                                              @RequestParam Integer lecturerId,
+    public ResponseEntity<Course> patchCourse(@RequestParam(required = false) Course.CourseType type,
+                                              @RequestParam(required = false) String time,
+                                              @RequestParam(required = false) String location,
                                               @PathVariable Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {
@@ -65,9 +64,7 @@ public class CourseController {
                 course.setTime(time);
             if (location != null)
                 course.setLocation(location);
-            if (lecturerId != null && lecturerRepository.findById(lecturerId).isPresent())
-                course.setLecturer(lecturerRepository.findById(lecturerId).get());
-            return ResponseEntity.ok(course);
+            return ResponseEntity.ok(courseRepository.save(course));
         }
         return ResponseEntity.notFound().build();
     }

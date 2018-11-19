@@ -28,11 +28,11 @@ public class Course {
     @Column
     private String time;
 
-    @ManyToMany(mappedBy = "courses")
+    @ManyToMany
     @JsonIgnore
     private Set<Student> students;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Subject subject;
 
     @ManyToOne

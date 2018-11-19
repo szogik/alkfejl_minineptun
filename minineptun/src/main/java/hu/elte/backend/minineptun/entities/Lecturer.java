@@ -7,22 +7,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Lecturer extends BaseEntity {
 
     @ManyToMany
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Set<Subject> subjects;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lecturer_id")
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private Set<Course> courses;
 }

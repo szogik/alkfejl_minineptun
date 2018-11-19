@@ -14,9 +14,10 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Student extends BaseEntity {
 
     @ManyToMany
+    @EqualsAndHashCode.Exclude
     private Set<Course> courses;
 }
