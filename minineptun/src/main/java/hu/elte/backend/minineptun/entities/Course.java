@@ -36,7 +36,6 @@ public class Course {
     private Subject subject;
 
     @ManyToOne
-    @JsonIgnore 
     private Lecturer lecturer;
 
     public enum CourseType {

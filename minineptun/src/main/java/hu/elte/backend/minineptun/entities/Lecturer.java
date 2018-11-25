@@ -25,5 +25,6 @@ public class Lecturer extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "lecturer_id")
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Set<Course> courses;
 }
