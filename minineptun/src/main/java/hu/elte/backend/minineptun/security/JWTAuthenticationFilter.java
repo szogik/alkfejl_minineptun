@@ -25,6 +25,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     static Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private AuthenticationManager authenticationManager;
+    private User user;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -34,7 +35,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            User user = new ObjectMapper().readValue(req.getInputStream(), User.class);
+            user = new ObjectMapper().readValue(req.getInputStream(), User.class);
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
         } catch (IOException e) {
@@ -49,6 +50,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claim("role", auth.getAuthorities().toArray()[0])
                 .setExpiration(new Date(System.currentTimeMillis() + 86_400_000L)).signWith(secretKey).compact();
         res.addHeader("Authorization", token);
+        res.addHeader("role", auth.getAuthorities().toArray()[0].toString());
     }
 
 
