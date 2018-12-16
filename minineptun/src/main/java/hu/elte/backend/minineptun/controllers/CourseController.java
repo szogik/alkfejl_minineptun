@@ -84,8 +84,7 @@ public class CourseController {
     public ResponseEntity<Course> updateCourse(@RequestBody Course course, @PathVariable(name = "id") Integer id) {
         Optional<Course> oCourse = courseRepository.findById(id);
         if (oCourse.isPresent()) {
-            Course old = oCourse.get();
-            course.setId(old.getId());
+            course.setId(id);
             return ResponseEntity.ok(courseRepository.save(course));
         }
         return ResponseEntity.notFound().build();
