@@ -134,6 +134,17 @@ public class SubjectController {
         return ResponseEntity.ok(course);
     }
 
+    @PutMapping("/{id}")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<Subject> updateSubject(@RequestBody Subject subject, @PathVariable(name = "id") Integer id) {
+        Optional<Subject> optionalSubject = subjectRepository.findById(id);
+        if (optionalSubject.isPresent()) {
+            subject.setId(id);
+            return ResponseEntity.ok(subjectRepository.save(subject));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     @Secured({"ROLE_ADMIN"})
     public ResponseEntity delete(@PathVariable Integer id) {
