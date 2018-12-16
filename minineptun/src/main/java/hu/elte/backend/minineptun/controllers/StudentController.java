@@ -50,9 +50,10 @@ public class StudentController {
         }
     }
 
-    @PatchMapping("/{name}/add-course")
+    @CrossOrigin
+    @PatchMapping("/{name}/add-course/{courseId}")
     @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
-    public ResponseEntity<Student> addCourse(@PathVariable(name = "name") String name, @RequestParam(name = "courseId") Integer courseId) {
+    public ResponseEntity<Student> addCourse(@PathVariable(name = "name") String name, @PathVariable(name = "courseId") Integer courseId) {
         Optional<Student> ostudent = studentRepository.findByName(name);
         if (!ostudent.isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -70,9 +71,9 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @PatchMapping("/{name}/remove-course")
+    @PatchMapping("/{name}/remove-course/{courseId}")
     @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
-    public ResponseEntity<Student> removeCourse(@PathVariable(name = "name") String name, @RequestParam(name = "courseId") Integer courseId) {
+    public ResponseEntity<Student> removeCourse(@PathVariable(name = "name") String name, @PathVariable(name = "courseId") Integer courseId) {
         Optional<Student> ostudent = studentRepository.findByName(name);
         if (!ostudent.isPresent()) {
             return ResponseEntity.badRequest().build();
