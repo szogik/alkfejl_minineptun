@@ -2,6 +2,7 @@ package hu.elte.backend.minineptun.controllers;
 
 
 import hu.elte.backend.minineptun.entities.Course;
+import hu.elte.backend.minineptun.entities.Lecturer;
 import hu.elte.backend.minineptun.repositories.CourseRepository;
 import hu.elte.backend.minineptun.repositories.LecturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,17 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/by-lecturer/{name}")
+    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
+    public ResponseEntity<Iterable<Course>> getCoursesByLecturer(@PathVariable String name) {
+        Optional<Lecturer> lecturer = lecturerRepository.findByName(name);
+        if (lecturer.isPresent()) {
+            return ResponseEntity.ok(lecturer.get().getCourses());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("")
     @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Course> postCourse(@RequestBody Course course) {
@@ -62,6 +74,18 @@ public class CourseController {
                 course.setTime(time);
             if (location != null)
                 course.setLocation(location);
+            return ResponseEntity.ok(courseRepository.save(course));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
+    public ResponseEntity<Course> updateCourse(@RequestBody Course course, @PathVariable(name = "id") Integer id) {
+        Optional<Course> oCourse = courseRepository.findById(id);
+        if (oCourse.isPresent()) {
+            Course old = oCourse.get();
+            course.setId(old.getId());
             return ResponseEntity.ok(courseRepository.save(course));
         }
         return ResponseEntity.notFound().build();
