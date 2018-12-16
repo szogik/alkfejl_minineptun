@@ -9,10 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.session.SessionManagementFilter;
-
-import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
@@ -20,35 +18,50 @@ import javax.annotation.Resource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Resource
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Bean
-    CorsFilter corsFilter() {
-        CorsFilter filter = new CorsFilter();
-        return filter;
-    }
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(corsFilter(), SessionManagementFilter.class).csrf().disable()
-                .authorizeRequests().antMatchers("/h2/**", "/login", "/users/**").permitAll()// important!
+                .cors()
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/h2/**", "/users/register").permitAll()   // important!
                 .anyRequest().authenticated()
                 .and()
-                .headers()// headerben mennek az authentication credential ok (important!)
+                .httpBasic()
+                .authenticationEntryPoint(getBasicAuthEntryPoint())
+                .and()
+                .headers()      // important!
                 .frameOptions().disable()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//nincs session
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
+    @Bean
+    public CustomBasicAuthenticationEntryPoint getBasicAuthEntryPoint() {
+        return new CustomBasicAuthenticationEntryPoint();
     }
+
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    protected void configureAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+    }
+
 }

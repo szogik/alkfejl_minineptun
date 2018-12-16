@@ -2,7 +2,8 @@ package hu.elte.backend.minineptun.controllers;
 
 import hu.elte.backend.minineptun.entities.User;
 import hu.elte.backend.minineptun.repositories.UserRepository;
-import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
+import hu.elte.backend.minineptun.security.AuthenticatedUser;
+import hu.elte.backend.minineptun.security.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -20,7 +21,10 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    private AuthenticatedUser authenticatedUser;
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
@@ -29,7 +33,12 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return ResponseEntity.ok(userDetailsService.setUserEntity(user,user.getUsername()));
+        return ResponseEntity.ok(myUserDetailsService.setUserEntity(user, user.getUsername()));
+    }
+
+    @PostMapping("login")
+    public ResponseEntity login() {
+        return ResponseEntity.ok(authenticatedUser.getUser());
     }
 
     @GetMapping("/{username}")

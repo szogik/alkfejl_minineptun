@@ -4,7 +4,6 @@ package hu.elte.backend.minineptun.controllers;
 import hu.elte.backend.minineptun.entities.Course;
 import hu.elte.backend.minineptun.repositories.CourseRepository;
 import hu.elte.backend.minineptun.repositories.LecturerRepository;
-import hu.elte.backend.minineptun.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -23,8 +22,6 @@ public class CourseController {
     @Autowired
     private LecturerRepository lecturerRepository;
 
-    @Autowired
-    private UserDetailsServiceImpl userService;
 
     @GetMapping("")
     @Secured({"ROLE_STUDENT", "ROLE_LECTURER", "ROLE_ADMIN"})

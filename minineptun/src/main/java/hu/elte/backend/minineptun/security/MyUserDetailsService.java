@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
+
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -30,16 +32,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private LecturerRepository lecturerRepository;
 
+    @Autowired
+    private AuthenticatedUser authenticatedUser;
+
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).get();
-        if (user == null) {
+        Optional<User> oUser = userRepository.findByUsername(username);
+        if (!oUser.isPresent()) {
             throw new UsernameNotFoundException(username);
         }
+        User user = oUser.get();
+        authenticatedUser.setUser(user);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), true, true, true, true, grantedAuthorities);
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 
     public User setUserEntity(User user, String fullName) {

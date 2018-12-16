@@ -20,6 +20,7 @@ public class Course {
     private Integer id;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private CourseType type;
 
     @Column

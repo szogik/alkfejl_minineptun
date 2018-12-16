@@ -39,7 +39,7 @@ public class LecturerController {
         }
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/by-name/{name}")
     @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
     public ResponseEntity<Lecturer> getLecturerByName(@PathVariable(name = "name") String name) {
         Optional<Lecturer> lecturer = lecturerRepository.findByName(name);

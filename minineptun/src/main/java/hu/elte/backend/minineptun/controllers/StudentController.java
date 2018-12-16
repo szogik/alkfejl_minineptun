@@ -39,7 +39,7 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/by-name/{name}")
     @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
     public ResponseEntity<Student> getStudentByName(@PathVariable(name = "name") String name) {
         Optional<Student> student = studentRepository.findByName(name);
