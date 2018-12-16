@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/students")
 public class StudentController {
@@ -38,9 +39,9 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/by-name")
-    @Secured({"ROLE_STUDENT"})
-    public ResponseEntity<Student> getStudentByName(@RequestParam(name = "name") String name) {
+    @GetMapping("/{name}")
+    @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
+    public ResponseEntity<Student> getStudentByName(@PathVariable(name = "name") String name) {
         Optional<Student> student = studentRepository.findByName(name);
         if (student.isPresent()) {
             return ResponseEntity.ok(student.get());
@@ -49,10 +50,10 @@ public class StudentController {
         }
     }
 
-    @PatchMapping("/{id}/add-course")
+    @PatchMapping("/{name}/add-course")
     @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
-    public ResponseEntity<Student> addCourse(@PathVariable(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
-        Optional<Student> ostudent = studentRepository.findById(id);
+    public ResponseEntity<Student> addCourse(@PathVariable(name = "name") String name, @RequestParam(name = "courseId") Integer courseId) {
+        Optional<Student> ostudent = studentRepository.findByName(name);
         if (!ostudent.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
@@ -69,10 +70,10 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @PatchMapping("/{id}/remove-course")
+    @PatchMapping("/{name}/remove-course")
     @Secured({"ROLE_STUDENT", "ROLE_ADMIN"})
-    public ResponseEntity<Student> removeCourse(@PathVariable(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
-        Optional<Student> ostudent = studentRepository.findById(id);
+    public ResponseEntity<Student> removeCourse(@PathVariable(name = "name") String name, @RequestParam(name = "courseId") Integer courseId) {
+        Optional<Student> ostudent = studentRepository.findByName(name);
         if (!ostudent.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
@@ -89,12 +90,12 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{name}")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity delete(@PathVariable Integer id) {
-        Optional<Student> oStudent = studentRepository.findById(id);
+    public ResponseEntity delete(@PathVariable String name) {
+        Optional<Student> oStudent = studentRepository.findByName(name);
         if (oStudent.isPresent()) {
-            studentRepository.deleteById(id);
+            studentRepository.deleteById(oStudent.get().getId());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

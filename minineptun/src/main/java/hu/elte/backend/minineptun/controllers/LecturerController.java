@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/lecturers")
 public class LecturerController {
@@ -38,10 +39,21 @@ public class LecturerController {
         }
     }
 
-    @PatchMapping("/{id}/add-course")
+    @GetMapping("/{name}")
+    @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
+    public ResponseEntity<Lecturer> getLecturerByName(@PathVariable(name = "name") String name) {
+        Optional<Lecturer> lecturer = lecturerRepository.findByName(name);
+        if (lecturer.isPresent()) {
+            return ResponseEntity.ok(lecturer.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/{name}/add-course")
     @Secured({"ROLE_Lecturer", "ROLE_ADMIN"})
-    public ResponseEntity<Lecturer> addCourse(@PathVariable(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
-        Optional<Lecturer> olecturer = lecturerRepository.findById(id);
+    public ResponseEntity<Lecturer> addCourse(@PathVariable(name = "name") String name, @RequestParam(name = "courseId") Integer courseId) {
+        Optional<Lecturer> olecturer = lecturerRepository.findByName(name);
         if (!olecturer.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
@@ -58,10 +70,10 @@ public class LecturerController {
         return ResponseEntity.ok(lecturer);
     }
 
-    @PatchMapping("/{id}/remove-course")
+    @PatchMapping("/{name}/remove-course")
     @Secured({"ROLE_LECTURER", "ROLE_ADMIN"})
-    public ResponseEntity<Lecturer> removeCourse(@PathVariable(name = "id") Integer id, @RequestParam(name = "courseId") Integer courseId) {
-        Optional<Lecturer> olecturer = lecturerRepository.findById(id);
+    public ResponseEntity<Lecturer> removeCourse(@PathVariable(name = "name") String name, @RequestParam(name = "courseId") Integer courseId) {
+        Optional<Lecturer> olecturer = lecturerRepository.findByName(name);
         if (!olecturer.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
@@ -78,12 +90,12 @@ public class LecturerController {
         return ResponseEntity.ok(lecturer);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{name}")
     @Secured({"ROLE_ADMIN"})
-    public ResponseEntity delete(@PathVariable Integer id) {
-        Optional<Lecturer> oLecturer = lecturerRepository.findById(id);
+    public ResponseEntity delete(@PathVariable(name = "name") String name) {
+        Optional<Lecturer> oLecturer = lecturerRepository.findByName(name);
         if (oLecturer.isPresent()) {
-            lecturerRepository.deleteById(id);
+            lecturerRepository.deleteById(oLecturer.get().getId());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
